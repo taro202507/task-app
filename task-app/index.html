@@ -3,92 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>タスク管理（学習用）</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>タスク管理（React）</title>
   </head>
   <body>
-    <main class="app" aria-label="タスク管理アプリ">
-      <header class="header">
-        <div class="header__text">
-          <h1>タスク管理</h1>
-          <p class="header__sub">学習用ミニアプリ（localStorage 保存）</p>
-        </div>
-        <div class="header__tools">
-          <p class="stats" id="stats" aria-live="polite"></p>
-          <label class="color-picker">
-            <span class="color-picker__label">パネル背景色</span>
-            <input type="color" id="panel-color" value="#fff9c4" title="タスク登録・一覧の背景色" />
-          </label>
-          <button type="button" class="btn btn--small" id="panel-color-reset">初期色</button>
-        </div>
-      </header>
-
-      <section class="panel" aria-labelledby="form-title">
-        <h2 id="form-title" class="panel__title">タスク登録・編集</h2>
-        <form id="task-form" class="form" novalidate>
-          <input type="hidden" id="task-id" value="" />
-
-          <label class="field">
-            <span class="field__label">タイトル <span class="req">必須</span></span>
-            <input id="title" name="title" type="text" maxlength="100" required placeholder="例: 設計書をレビューする" />
-          </label>
-
-          <label class="field">
-            <span class="field__label">詳細</span>
-            <textarea id="description" name="description" rows="3" maxlength="500" placeholder="任意のメモ"></textarea>
-          </label>
-
-          <div class="form__row">
-            <label class="field field--inline">
-              <span class="field__label">状態</span>
-              <select id="status" name="status">
-                <option value="todo">未完了</option>
-                <option value="done">完了</option>
-              </select>
-            </label>
-
-            <label class="field field--inline">
-              <span class="field__label">優先度</span>
-              <select id="priority" name="priority">
-                <option value="high">高</option>
-                <option value="medium" selected>中</option>
-                <option value="low">低</option>
-              </select>
-            </label>
-          </div>
-
-          <div class="form__actions">
-            <button type="submit" class="btn btn--primary" id="submit-btn">追加</button>
-            <button type="button" class="btn" id="cancel-btn" hidden>キャンセル</button>
-          </div>
-        </form>
-      </section>
-
-      <section class="panel" aria-labelledby="list-title">
-        <div class="panel__head">
-          <h2 id="list-title" class="panel__title">タスク一覧</h2>
-          <div class="panel__filters">
-            <label class="filter">
-              <span class="filter__label">優先度</span>
-              <select id="filter-priority">
-                <option value="all">すべて</option>
-                <option value="high">高のみ</option>
-                <option value="medium">中のみ</option>
-                <option value="low">低のみ</option>
-              </select>
-            </label>
-            <label class="search">
-              <span class="sr-only">検索</span>
-              <input id="search" type="search" placeholder="タイトル・詳細で検索…" autocomplete="off" />
-            </label>
-          </div>
-        </div>
-
-        <ul id="task-list" class="task-list" aria-live="polite"></ul>
-        <p id="empty-message" class="empty" hidden>タスクがありません。上のフォームから追加してください。</p>
-      </section>
-    </main>
-
-    <script src="app.js"></script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
