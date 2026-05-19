@@ -1,4 +1,7 @@
 const STORAGE_KEY = "taskApp.tasks.v1";
+const PANEL_COLOR_KEY = "taskApp.panelBg.v1";
+const DEFAULT_PANEL_BG = "#fff9c4";
+const DEFAULT_PANEL_BORDER = "#facc15";
 
 const PRIORITY_ORDER = { high: 0, medium: 1, low: 2 };
 const PRIORITY_LABEL = { high: "高", medium: "中", low: "低" };
@@ -16,6 +19,36 @@ const $filterPriority = document.getElementById("filter-priority");
 const $taskList = document.getElementById("task-list");
 const $emptyMessage = document.getElementById("empty-message");
 const $stats = document.getElementById("stats");
+const $panelColor = document.getElementById("panel-color");
+const $panelColorReset = document.getElementById("panel-color-reset");
+
+function normalizeHexColor(value) {
+  if (typeof value !== "string") return null;
+  const v = value.trim();
+  return /^#[0-9a-fA-F]{6}$/.test(v) ? v.toLowerCase() : null;
+}
+
+function darkenHex(hex, amount = 0.12) {
+  const n = parseInt(hex.slice(1), 16);
+  const r = Math.max(0, ((n >> 16) & 255) * (1 - amount)) | 0;
+  const g = Math.max(0, ((n >> 8) & 255) * (1 - amount)) | 0;
+  const b = Math.max(0, (n & 255) * (1 - amount)) | 0;
+  return `#${[r, g, b].map((c) => c.toString(16).padStart(2, "0")).join("")}`;
+}
+
+function applyPanelColor(hex, save = true) {
+  const color = normalizeHexColor(hex) || DEFAULT_PANEL_BG;
+  const border = color === DEFAULT_PANEL_BG ? DEFAULT_PANEL_BORDER : darkenHex(color);
+  document.documentElement.style.setProperty("--panel-bg", color);
+  document.documentElement.style.setProperty("--panel-border", border);
+  if ($panelColor) $panelColor.value = color;
+  if (save) localStorage.setItem(PANEL_COLOR_KEY, color);
+}
+
+function loadPanelColor() {
+  const saved = normalizeHexColor(localStorage.getItem(PANEL_COLOR_KEY));
+  applyPanelColor(saved || DEFAULT_PANEL_BG, false);
+}
 
 function normalizePriority(value) {
   return value === "high" || value === "low" ? value : "medium";
@@ -221,6 +254,20 @@ $search.addEventListener("input", () => {
 $filterPriority.addEventListener("change", () => {
   render();
 });
+
+if ($panelColor) {
+  $panelColor.addEventListener("input", () => {
+    applyPanelColor($panelColor.value);
+  });
+}
+
+if ($panelColorReset) {
+  $panelColorReset.addEventListener("click", () => {
+    applyPanelColor(DEFAULT_PANEL_BG);
+  });
+}
+
+loadPanelColor();
 
 $taskList.addEventListener("click", (ev) => {
   const btn = ev.target.closest("button[data-action]");

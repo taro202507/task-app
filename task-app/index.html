@@ -13,7 +13,14 @@
           <h1>タスク管理</h1>
           <p class="header__sub">学習用ミニアプリ（localStorage 保存）</p>
         </div>
-        <p class="stats" id="stats" aria-live="polite"></p>
+        <div class="header__tools">
+          <p class="stats" id="stats" aria-live="polite"></p>
+          <label class="color-picker">
+            <span class="color-picker__label">パネル背景色</span>
+            <input type="color" id="panel-color" value="#fff9c4" title="タスク登録・一覧の背景色" />
+          </label>
+          <button type="button" class="btn btn--small" id="panel-color-reset">初期色</button>
+        </div>
       </header>
 
       <section class="panel" aria-labelledby="form-title">
