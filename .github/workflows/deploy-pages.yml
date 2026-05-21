@@ -17,24 +17,34 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: task-app
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-          cache-dependency-path: task-app/package-lock.json
 
-      - run: npm ci
-      - run: npm run build
+      - name: Build task-app
+        working-directory: task-app
+        run: |
+          npm ci
+          npm run build
+
+      - name: Build staff-app
+        working-directory: staff-app
+        run: |
+          npm ci
+          npm run build
+
+      - name: Combine dist for GitHub Pages
+        run: |
+          mkdir -p deploy/staff-app
+          cp -r task-app/dist/* deploy/
+          cp -r staff-app/dist/* deploy/staff-app/
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: task-app/dist
+          path: deploy
 
   deploy:
     needs: build
