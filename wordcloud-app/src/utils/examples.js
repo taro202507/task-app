@@ -1,5 +1,3 @@
-import { SLOT_COUNT } from "./storage.js";
-
 export const EXAMPLE_MUSIC = [
   "夜の踊り子(サカナクション)",
   "ライラック(Mrs. GREEN APPLE)",
@@ -166,16 +164,6 @@ export function shuffleArray(items) {
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;
-}
-
-/** 例データをスロット50件分に整形（シャッフル済み・上限50） */
-export function exampleToSlots(words) {
-  const shuffled = shuffleArray(words).slice(0, SLOT_COUNT);
-  const slots = Array.from({ length: SLOT_COUNT }, () => "");
-  shuffled.forEach((word, i) => {
-    slots[i] = word;
-  });
-  return slots;
 }
 
 /** クラウド表示用にワード順をシャッフル */

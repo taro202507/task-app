@@ -4,7 +4,7 @@ import {
   EXAMPLE_FOOD,
   EXAMPLE_MUSIC,
   EXAMPLE_SOCCER,
-  exampleToSlots,
+  shuffleArray,
   shuffleWords,
 } from "../utils/examples.js";
 import {
@@ -12,6 +12,7 @@ import {
   REQUIRED_COUNT,
   SLOT_COUNT,
   collectWords,
+  emptySlots,
   loadShowFrames,
   loadSlots,
   saveShowFrames,
@@ -39,12 +40,18 @@ export function WordRegisterPage() {
     navigate("/cloud", { state: { words, showFrames } });
   }
 
+  function handleClear() {
+    setError("");
+    const cleared = emptySlots();
+    setSlots(cleared);
+    saveSlots(cleared);
+  }
+
   function handleExample(exampleList) {
     setError("");
-    const nextSlots = exampleToSlots(exampleList);
-    setSlots(nextSlots);
-    saveSlots(nextSlots);
-    goToCloud(collectWords(nextSlots));
+    const manualWords = collectWords(slots);
+    const exampleWords = shuffleArray(exampleList);
+    goToCloud([...manualWords, ...exampleWords]);
   }
 
   function handleExecute(ev) {
@@ -86,39 +93,44 @@ export function WordRegisterPage() {
       </div>
 
       <form className="register-form" onSubmit={handleExecute}>
-        <ol className="word-slots">
-          {slots.map((value, index) => (
-            <li key={index} className="word-slot">
-              <label htmlFor={`word-${index}`}>
-                <span className="word-slot__num">{index + 1}</span>
-                {index < REQUIRED_COUNT && <span className="req">必須</span>}
-              </label>
-              <input
-                id={`word-${index}`}
-                type="text"
-                maxLength={MAX_WORD_LEN}
-                placeholder={index < REQUIRED_COUNT ? "入力してください" : "任意"}
-                value={value}
-                onChange={(e) => updateSlot(index, e.target.value)}
-              />
-            </li>
-          ))}
-        </ol>
+        <div className="register-form__scroll">
+          <ol className="word-slots">
+            {slots.map((value, index) => (
+              <li key={index} className="word-slot">
+                <label htmlFor={`word-${index}`}>
+                  <span className="word-slot__num">{index + 1}</span>
+                  {index < REQUIRED_COUNT && <span className="req">必須</span>}
+                </label>
+                <input
+                  id={`word-${index}`}
+                  type="text"
+                  maxLength={MAX_WORD_LEN}
+                  placeholder={index < REQUIRED_COUNT ? "入力してください" : "任意"}
+                  value={value}
+                  onChange={(e) => updateSlot(index, e.target.value)}
+                />
+              </li>
+            ))}
+          </ol>
 
-        <label className="frames-option">
-          <input
-            type="checkbox"
-            checked={showFrames}
-            onChange={(e) => {
-              const next = e.target.checked;
-              setShowFrames(next);
-              saveShowFrames(next);
-            }}
-          />
-          枠あり
-        </label>
+          <label className="frames-option">
+            <input
+              type="checkbox"
+              checked={showFrames}
+              onChange={(e) => {
+                const next = e.target.checked;
+                setShowFrames(next);
+                saveShowFrames(next);
+              }}
+            />
+            枠あり
+          </label>
+        </div>
 
-        <div className="form-actions">
+        <div className="register-form__footer form-actions">
+          <button type="button" className="btn" onClick={handleClear}>
+            クリア
+          </button>
           <button type="submit" className="btn btn--primary">
             実行
           </button>
