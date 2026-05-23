@@ -36,11 +36,18 @@ jobs:
           npm ci
           npm run build
 
+      - name: Build wordcloud-app
+        working-directory: wordcloud-app
+        run: |
+          npm ci
+          npm run build
+
       - name: Combine dist for GitHub Pages
         run: |
-          mkdir -p deploy/staff-app
+          mkdir -p deploy/staff-app deploy/wordcloud-app
           cp -r task-app/dist/* deploy/
           cp -r staff-app/dist/* deploy/staff-app/
+          cp -r wordcloud-app/dist/* deploy/wordcloud-app/
 
       - uses: actions/upload-pages-artifact@v3
         with:
